@@ -1,0 +1,65 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md']
+  schedule:
+    - cron: '15 3 * * *' # past stops drop off the calendar on a rebuild
+  repository_dispatch:
+    types: [shopify-products-changed]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SITE_ORIGIN: ${{ vars.SITE_ORIGIN || format('https://{0}.github.io', github.repository_owner) }}
+      BASE_PATH: ${{ vars.SITE_ORIGIN && '' || format('/{0}', github.event.repository.name) }}
+      PUBLIC_SITE_NOINDEX: ${{ vars.SITE_NOINDEX || '1' }}
+      PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ vars.PUBLIC_SHOPIFY_STORE_DOMAIN }}
+      PUBLIC_SHOPIFY_STOREFRONT_TOKEN: ${{ vars.PUBLIC_SHOPIFY_STOREFRONT_TOKEN }}
+      PUBLIC_BOOKING_ENDPOINT: ${{ vars.PUBLIC_BOOKING_ENDPOINT }}
+      PUBLIC_ADMIN_ENABLED: ${{ vars.ADMIN_ENABLED }}
+      PUBLIC_ADMIN_REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Use mock Storefront API until a store is configured
+        if: ${{ !vars.PUBLIC_SHOPIFY_STORE_DOMAIN }}
+        run: |
+          node scripts/mock-storefront.mjs &
+          echo "PUBLIC_SHOPIFY_STOREFRONT_URL=http://localhost:4400" >> "$GITHUB_ENV"
+          sleep 2
+      - run: pnpm build
+      - run: pnpm check:site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

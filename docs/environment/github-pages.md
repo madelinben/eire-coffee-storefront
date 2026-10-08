@@ -4,7 +4,7 @@ Free hosting for showing the preview to the owners. Production strategy stays Cl
 
 ## How it works
 
-A Pages deploy workflow is not wired in this repo yet (`.github/workflows/ci.yml` only checks). When added, it should build this app against the **live Shopify store**, run `check:site`, and publish `dist/` to `https://<owner>.github.io/<repo>/`. Triggers: push to `main` touching this app, every day (past stops drop off the calendar on a rebuild), `repository_dispatch` type `shopify-products-changed` (for a Shopify webhook), and manual run.
+`.github/workflows/pages.yml` builds this app against the **live Shopify store**, run `check:site`, and publish `dist/` to `https://<owner>.github.io/<repo>/`. Triggers: push to `main` touching this app, every day (past stops drop off the calendar on a rebuild), `repository_dispatch` type `shopify-products-changed` (for a Shopify webhook), and manual run.
 
 | Setting | Value | Why |
 |---|---|---|
@@ -28,8 +28,8 @@ The full launch sequence is in `DEPLOYMENT_STRATEGY.md` § 7.
 ## One-time enable
 
 1. GitHub only serves Pages from a **private** repo on a paid plan. On a free account the repo must be public.
-2. Settings → Pages → Source: **GitHub Actions** (or `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`).
-3. Run the workflow (Actions → Deploy Shopify site to GitHub Pages → Run workflow). Until Pages is enabled the workflow builds and checks, then skips the deploy with a warning.
+2. Settings → Pages → Source: **GitHub Actions**. Not "Deploy from a branch": that runs Jekyll over the source and fails on `.astro` front matter. (or `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`).
+3. Run the workflow (Actions → Deploy to GitHub Pages → Run workflow). Until Pages is enabled the workflow builds and checks, then skips the deploy with a warning.
 
 ## Local check of the Pages build
 
