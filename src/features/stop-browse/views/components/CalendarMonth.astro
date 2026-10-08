@@ -1,0 +1,40 @@
+---
+import { formatMonth, formatStopDate, monthGrid, type Stop } from '@/domain/stop/stop-timing';
+
+interface Props {
+  year: number;
+  month: number;
+  stops: readonly Stop[];
+  /** Today, `YYYY-MM-DD`, to ring the current day. */
+  today: string;
+}
+const { year, month, stops, today } = Astro.props;
+const weeks = monthGrid(year, month, stops);
+const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+---
+
+<!-- A month at a glance for larger screens. The list below it holds the same stops in full, and is what phones and screen readers use. -->
+<table class="w-full table-fixed border-separate border-spacing-1.5 text-left">
+  <caption class="mb-3 text-left font-display text-3xl text-primary">{formatMonth(year, month)}</caption>
+  <thead>
+    <tr>{names.map((name) => <th scope="col" class="eyebrow pb-1 text-muted-foreground">{name}</th>)}</tr>
+  </thead>
+  <tbody>
+    {weeks.map((week) => (
+      <tr>
+        {week.map((day) => {
+          return (
+            <td class={`cal-day ${day.inMonth ? 'bg-card' : 'text-muted-foreground'}${day.date === today ? ' ring-2 ring-accent' : ''}`}>
+              <span class="font-semibold tabular-nums"><span class="sr-only">{formatStopDate(day.date)}</span><span aria-hidden="true">{Number(day.date.slice(8))}</span></span>
+              {day.inMonth && day.stops.map((stop) => (
+                <a href={`#${stop.id}`} class={`cal-stop ${stop.kind === 'private' ? 'bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground'}`}>
+                  {stop.kind === 'private' ? 'Booked' : stop.venueName}
+                </a>
+              ))}
+            </td>
+          );
+        })}
+      </tr>
+    ))}
+  </tbody>
+</table>

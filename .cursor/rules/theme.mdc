@@ -1,0 +1,60 @@
+---
+description: Design token contract for the site — calm, premium, Irish coastal
+alwaysApply: false
+globs:
+  - **/*.{tsx,astro,css}
+---
+
+# Theme
+
+Tokens live in `src/styles/global.css`. No `tailwind.config.js`: Tailwind v4 is CSS-first. Palette values come from the @eire_coffee lighthouse post (sage `#8e926d`, forest ink `#3c421c`, off-white); cream and crema (coffee gold) are derived. Set once in `global.css`, referenced only by token. Never raw hex in components. Replace the values from the real logo and brand guide when they arrive.
+
+## Vibe
+
+Calm, warm, unhurried, a little poetic. Flat single-colour illustration in the lighthouse-stencil style (`Illustration.astro`: lighthouse, trailer, cup, shamrock), generous whitespace, thin rules, big serif headlines (one italic phrase per hero is the signature), uppercase tracked small labels (`.eyebrow`). Content stays legible first (WCAG AA, `accessibility.mdc`).
+
+## Colour roles (shadcn-style token names)
+
+| Role | Token |
+|---|---|
+| Page | `--background` (cream) / `--foreground` (deep ink) |
+| Brand ground and bands | `--secondary` (sage) / `--secondary-foreground` |
+| Dark bands, primary button, footer | `--primary` (forest) / `--primary-foreground` |
+| Coffee-gold accent (buttons on dark, rules, ornaments) | `--accent` / `--accent-foreground` |
+| Surface | `--card`, `--muted` |
+| Hairlines | `--border` |
+| Secondary text | `--muted-foreground` |
+| Focus and gold text on light grounds | `--ring` |
+| Error / success | `--destructive`, `--success` |
+
+Gold (`--accent`) as text on cream fails AA: use `--ring` for gold text on light grounds. Muted text on sage fails AA: use `--secondary-foreground` there.
+
+## Shared classes
+
+`.btn` + `.btn-primary | .btn-accent | .btn-outline`, `.card`, `.eyebrow`, `.field`, `.cal-day`, `.cal-stop` live in `@layer components` so utilities (`bg-primary`) still win. Pair buttons with `.press`.
+
+## Typography
+
+Fraunces (variable, serif) for headings, Inter (variable) for body, both self-hosted and preloaded (2 files, under the 100 KB font budget). Headings are normal case, `font-medium`, tight leading, `text-balance`. Body `text-pretty`. `antialiased` on `<html>`. Fraunces is a placeholder choice until the brand typeface is known.
+
+## Spacing and shape
+
+`--spacing: 0.25rem`. Page gutter `px-6`; plain content sections use `.section-y`. Cards `rounded-3xl` with a 1px `--border`; pills for buttons; the home hero picture is an arch (`rounded-t-[999px]`), echoing the lighthouse door.
+
+## Motion
+
+- CSS only, no animation library: lighthouse beam sweep, drifting gulls, rising steam, slow ticker, hero rise, scroll reveals
+- Timing `cubic-bezier(0.2, 0, 0, 1)`. Never `transition: all`: list properties
+- Honour `prefers-reduced-motion`: animations are wrapped in `@media (prefers-reduced-motion: no-preference)`, reveals render in their final state
+- Skip enter animation on first paint above the fold: animate on scroll into view
+- Button feedback moves `top` by whole pixels (`.press`), never `transform` (GPU layer seams at fractional display scales)
+
+## Hit area, media and touch
+
+- Interactive controls `min-h-10` (40px, most are 44px). Adjacent hit areas must not overlap
+- `tabular-nums` on prices, times and counts
+- `overscroll-behavior: contain` inside overlays and dialogs
+
+## Pictures
+
+Real photos are uploaded in the admin (`src/assets/uploads`, listed in `pictures.json`). Until then the illustration leads. The earlier venture's photo (`capuchin-hale-interior`) is used on the story page only. Photos with identifiable customers or children are not used. `pnpm images:brand` renders `og-default.png`, `apple-touch-icon.png` and `favicon.svg` from the palette and font.

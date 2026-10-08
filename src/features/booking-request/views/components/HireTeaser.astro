@@ -1,0 +1,22 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { siteContent } from '@/data/Content/site-content';
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+
+const { packages, travelNote } = siteContent.hire;
+---
+
+<section class="bg-primary text-primary-foreground">
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 section-y lg:grid-cols-[1.1fr_0.9fr]">
+    <div>
+      <p data-reveal class="eyebrow text-accent">Hire the trailer</p>
+      <h2 data-reveal class="mt-4 text-4xl sm:text-6xl">Your event, our trailer</h2>
+      <p data-reveal class="mt-6 max-w-xl text-lg text-primary-foreground/85">Weddings, festivals, launches and staff mornings. {travelNote}</p>
+      <ul data-reveal class="mt-6 flex flex-wrap gap-2">
+        {packages.map((item) => <li class="rounded-full border border-primary-foreground/30 px-4 py-2 text-sm font-semibold">{item.name}</li>)}
+      </ul>
+      <p data-reveal class="mt-8"><a href={withBase('/book/')} class="btn btn-accent press">Ask about a date</a></p>
+    </div>
+    <div data-reveal="right" class="justify-self-center text-secondary"><Illustration name="trailer" cut="var(--primary)" class="w-full max-w-md" /></div>
+  </div>
+</section>

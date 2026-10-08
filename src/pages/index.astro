@@ -1,0 +1,61 @@
+---
+import { requireSite } from '@/utilities/require-site';
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import HomeHero from '@/features/brand-story/views/components/HomeHero.astro';
+import StoryValues from '@/features/brand-story/views/components/StoryValues.astro';
+import PhotoStrip from '@/features/brand-story/views/components/PhotoStrip.astro';
+import MenuPreview from '@/features/menu-browse/views/components/MenuPreview.astro';
+import VentureTeaser from '@/features/brand-story/views/components/VentureTeaser.astro';
+import HireTeaser from '@/features/booking-request/views/components/HireTeaser.astro';
+import NextStopCard from '@/features/stop-browse/views/components/NextStopCard.astro';
+import UpcomingStops from '@/features/stop-browse/views/components/UpcomingStops.astro';
+import ShopStrip from '@/features/product-browse/views/components/ShopStrip.astro';
+import FaqTeaser from '@/features/faq-browse/views/components/FaqTeaser.astro';
+import FollowBand from '@/features/contact-hub/views/components/FollowBand.astro';
+import TickerBand from '@/features/site-shell/views/components/TickerBand.astro';
+import OrnamentDivider from '@/features/site-shell/views/components/OrnamentDivider.astro';
+import { stopEventNode } from '@/features/site-seo/utilities/schema-nodes';
+import { getProductsServer } from '@/data/Product/get-products-server';
+import { siteContent } from '@/data/Content/site-content';
+import { stops } from '@/data/Stop/stops';
+import { splitStops } from '@/domain/stop/stop-timing';
+import { siteRoot, toAbsolute, withBase } from '@/utilities/with-base';
+
+const now = new Date();
+const site = requireSite(Astro.site);
+const upcoming = splitStops(stops, now).upcoming.filter((stop) => stop.kind !== 'private');
+const [next, ...following] = upcoming;
+const products = await getProductsServer();
+const image = toAbsolute(site, '/og-default.png');
+---
+
+<PageLayout
+  title="Home"
+  absoluteTitle="Éire Coffee Co.: Mobile Coffee Trailer in Chester"
+  description="Éire Coffee Co. is a mobile coffee trailer from Chester serving markets, festivals and weddings across the North West. Good coffee, great craic."
+  schema={upcoming.slice(0, 3).map((stop) => stopEventNode({ origin: siteRoot(site), url: toAbsolute(site, '/calendar/'), image, stop }))}
+>
+  <CartLauncher slot="actions" client:idle />
+  <HomeHero />
+
+  <section class="mx-auto grid max-w-6xl gap-10 px-6 pb-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+    <NextStopCard stop={next} class="relative -mt-16 shadow-2xl shadow-primary/20 lg:-mt-24" />
+    <div>
+      <h2 data-reveal class="text-3xl sm:text-4xl">{following.length > 0 ? 'Coming up' : 'Find us'}</h2>
+      {following.length > 0 && <UpcomingStops stops={following.slice(0, 3)} />}
+      <p data-reveal class="mt-4"><a href={withBase('/calendar/')} class="font-semibold underline underline-offset-4">See the full calendar and subscribe</a></p>
+    </div>
+  </section>
+
+  <OrnamentDivider />
+  <StoryValues />
+  <TickerBand words={siteContent.home.ticker} tone="sage" />
+  <MenuPreview />
+  <HireTeaser />
+  <VentureTeaser />
+  <PhotoStrip />
+  <ShopStrip products={products} />
+  <FaqTeaser />
+  <FollowBand />
+</PageLayout>

@@ -1,0 +1,80 @@
+---
+import { requireSite } from '@/utilities/require-site';
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import AddToCartForm from '@/features/product-browse/views/components/AddToCartForm.tsx';
+import ShopStrip from '@/features/product-browse/views/components/ShopStrip.astro';
+import { getProductsServer } from '@/data/Product/get-products-server';
+import { formVariants, optionLabel, priceSummary, pricesVary } from '@/data/Product/product-display';
+import { settings } from '@/data/Content/settings';
+import { productMetaDescription } from '@/features/site-seo/utilities/meta-text';
+import { productNode } from '@/features/site-seo/utilities/schema-nodes';
+import { shopifyImageUrl, shopifySrcSet } from '@/utilities/shopify-image-url';
+import { siteRoot, toAbsolute, withBase } from '@/utilities/with-base';
+
+export async function getStaticPaths() {
+  const products = await getProductsServer();
+  return products.map((product) => ({
+    params: { handle: product.handle },
+    props: { product, related: products.filter((other) => other.handle !== product.handle).slice(0, 3) },
+  }));
+}
+
+const { product, related } = Astro.props;
+const site = requireSite(Astro.site);
+const url = toAbsolute(site, `/shop/${product.handle}/`);
+const absolute = (path: string) => toAbsolute(site, path);
+const description = product.description.trim();
+const fallbackDescription = description || `${product.title} from Éire Coffee Co.`;
+const images = product.images.nodes;
+const ogImage = images[0] ? absolute(shopifyImageUrl(images[0].url, 1200, 630)) : undefined;
+---
+
+<PageLayout
+  title={product.title}
+  description={productMetaDescription(product.title, priceSummary(product), description)}
+  ogType="product"
+  image={ogImage}
+  imageAlt={images[0]?.altText ?? product.title}
+  breadcrumbs={[{ name: 'Shop', path: '/shop/' }, { name: product.title, path: `/shop/${product.handle}/` }]}
+  schema={[
+    productNode({
+      origin: siteRoot(site),
+      url,
+      name: product.title,
+      description: fallbackDescription,
+      images: images.map((image) => absolute(shopifyImageUrl(image.url, 1200))),
+      sku: product.handle,
+      offers: product.variants.nodes.map((variant) => ({ price: Number(variant.price.amount).toFixed(2), inStock: variant.availableForSale, name: variant.title === 'Default Title' ? undefined : variant.title })),
+    }),
+  ]}
+>
+  <CartLauncher slot="actions" client:idle />
+  <section class="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-2">
+    <div class="flex flex-col gap-4">
+      {images.map((image, index) => (
+        <img
+          src={shopifyImageUrl(image.url, 960)}
+          srcset={shopifySrcSet(image.url, [480, 960, 1440]) || undefined}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          alt={image.altText ?? product.title}
+          width={image.width ?? 1600}
+          height={image.height ?? 1600}
+          loading={index < 2 ? undefined : 'lazy'}
+          fetchpriority={index === 0 ? 'high' : undefined}
+          decoding={index === 0 ? 'sync' : 'async'}
+          class="h-auto w-full rounded-3xl bg-muted"
+        />
+      ))}
+    </div>
+    <div>
+      <a href={withBase('/shop/')} class="font-semibold underline underline-offset-4">← The shop</a>
+      <h1 class="mt-4 text-4xl sm:text-6xl">{product.title}</h1>
+      <p class="mt-3 font-display text-3xl tabular-nums text-primary">{priceSummary(product)}</p>
+      <p class="mt-6 max-w-prose whitespace-pre-line">{fallbackDescription}</p>
+      <AddToCartForm client:visible name={product.title} optionLabel={optionLabel(product)} variants={formVariants(product)} showVariantPrices={pricesVary(product)} />
+      <p class="mt-6 max-w-prose text-sm text-muted-foreground">{settings.shopNote} Questions? See the <a class="font-semibold underline" href={withBase('/faqs/')}>FAQs</a> or <a class="font-semibold underline" href={withBase('/contact/')}>get in touch</a>.</p>
+    </div>
+  </section>
+  <ShopStrip products={related} heading="More from the shop" eager />
+</PageLayout>

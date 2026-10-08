@@ -1,0 +1,21 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { formatStopDateShort, formatTimes, type Stop } from '@/domain/stop/stop-timing';
+
+interface Props {
+  stops: Stop[];
+}
+const { stops } = Astro.props;
+---
+
+<ul class="divide-y divide-border">
+  {stops.map((stop) => (
+    <li data-reveal class="py-4">
+      <a href={`${withBase('/calendar/')}#${stop.id}`} class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <span class="font-display text-xl text-primary">{formatStopDateShort(stop.date)}</span>
+        <span class="text-sm font-semibold tabular-nums">{formatTimes(stop)}</span>
+        <span class="w-full text-muted-foreground">{stop.kind === 'private' ? 'Private event' : `${stop.venueName}, ${stop.locality}`}</span>
+      </a>
+    </li>
+  ))}
+</ul>

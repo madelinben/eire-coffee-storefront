@@ -1,0 +1,32 @@
+---
+import { withBase } from '@/utilities/with-base';
+import Logo from '@/features/site-shell/views/components/Logo.astro';
+
+const links = [
+  { href: withBase('/calendar/'), label: 'Find us' },
+  { href: withBase('/menu/'), label: 'Menu' },
+  { href: withBase('/book/'), label: 'Book the trailer' },
+  { href: withBase('/shop/'), label: 'Shop' },
+  { href: withBase('/our-story/'), label: 'Our story' },
+  { href: withBase('/faqs/'), label: 'FAQs' },
+  { href: withBase('/contact/'), label: 'Contact' },
+];
+const current = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:bg-accent focus:p-2">Skip to content</a>
+  <div class="mx-auto grid max-w-6xl grid-cols-[1fr_auto] items-center gap-x-6 gap-y-1 px-4 py-3 sm:px-6 xl:flex xl:justify-between">
+    <a href={withBase('/')} class="shrink-0 text-3xl text-primary" aria-label="Éire Coffee Co. home"><Logo /></a>
+    <nav aria-label="Main" class="order-3 col-span-2 flex items-center gap-1 overflow-x-auto [scrollbar-width:none] max-xl:[mask-image:linear-gradient(to_right,#000_92%,transparent)] xl:order-none xl:overflow-visible">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          aria-current={current.startsWith(link.href) ? 'page' : undefined}
+          class="min-h-10 shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:px-4 aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground hover:bg-muted aria-[current=page]:hover:bg-primary"
+        >{link.label}</a>
+      ))}
+    </nav>
+    <div class="flex items-center justify-end gap-2"><slot name="actions" /></div>
+  </div>
+</header>

@@ -1,0 +1,17 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+import VentureStory from '@/features/brand-story/views/components/VentureStory.astro';
+import { siteContent } from '@/data/Content/site-content';
+---
+
+<PageLayout
+  title="Our Story"
+  description="Éire Coffee is a new venture from the people behind Capuchin Coffee in Hale, Altrincham. Meet the independent coffee house that led to the trailer."
+  breadcrumbs={[{ name: 'Our story', path: '/our-story/' }]}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title={siteContent.venture.title} kicker="Our story" lede={siteContent.venture.intro} art="cup" />
+  <VentureStory />
+</PageLayout>

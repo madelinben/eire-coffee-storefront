@@ -1,0 +1,11 @@
+{
+  "headline": "Good coffee. Great craic.",
+  "subline": "A mobile coffee trailer rolling out of Chester, pouring proper coffee at markets, festivals, weddings and wherever you need a warm welcome in the North West.",
+  "story": "Éire is Irish for Ireland, and it is how we like to serve: unhurried, generous and with a bit of chat on the side. One trailer, carefully made coffee and the sort of welcome you would get at a kitchen table back home. Find us at a stop near you, or ask us to pull up at your event.",
+  "values": [
+    { "title": "Good coffee", "text": "Carefully pulled espresso and a short, honest menu. We would rather do a few things properly than a lot of things quickly." },
+    { "title": "Great craic", "text": "Conversation is part of the order. Stop, say hello and stay a while. Nobody gets rushed at our hatch." },
+    { "title": "Céad míle fáilte", "text": "A hundred thousand welcomes. Whether you are a regular, a first-timer or a wedding party of one hundred, there is always room." }
+  ],
+  "ticker": ["Good coffee", "Great craic", "Chester", "North West", "Mobile trailer", "Céad míle fáilte"]
+}

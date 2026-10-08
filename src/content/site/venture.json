@@ -1,0 +1,65 @@
+{
+  "title": "New venture, not our first",
+  "intro": "Éire is new, but we have poured coffee for a living before. Here is what we did first, and what we are bringing to the trailer.",
+  "paragraphs": [
+    "Before the trailer there was Capuchin Coffee: an independent coffee house on Victoria Road in the village of Hale, Altrincham, run by a couple of coffee-loving enthusiasts who wanted to serve great coffee and make people's days a little bit better.",
+    "We built it as a safe, welcoming space for everyone: human friendly, dog friendly, baby friendly, everyone friendly. Over time many of our regulars became our friends, and the place grew into a small community hub, with coffee and cakes in the day and a licensed bar for the evening.",
+    "Éire takes what worked there out on the road: the same careful coffee, the same open door, and a bit more craic. The coffee shop taught us how to look after people. The trailer lets us bring that to you, wherever you are."
+  ],
+  "picture": "capuchin-hale-interior",
+  "highlights": [
+    {
+      "title": "Everyone welcome",
+      "text": "Human friendly, dog friendly, baby friendly, everyone friendly. We even kept a wall of fame for the good dogs who visited."
+    },
+    {
+      "title": "Proper coffee",
+      "text": "Our signature blend was 100% Fairtrade Arabica from Honduras, Peru, Brazil and Sumatra, roasted by a Glasgow roastery with a carbon-neutral certification."
+    },
+    {
+      "title": "A community space",
+      "text": "Sensory baby classes, stay and play sessions and quiz nights, and the room was available to hire for private events."
+    },
+    {
+      "title": "Day into evening",
+      "text": "Specialty coffee, cakes, brunch and sandwiches by day, then craft beer, wine and cocktails from 11am and an evening menu on Fridays."
+    }
+  ],
+  "facts": [
+    {
+      "label": "Where",
+      "value": "Victoria Road, Hale village, Altrincham"
+    },
+    {
+      "label": "What we served",
+      "value": "Specialty coffee, cakes, brunch, loose-leaf teas, milkshakes and frappes, pupuccinos and babycinos"
+    },
+    {
+      "label": "Food hygiene rating",
+      "value": "5 (very good)"
+    },
+    {
+      "label": "Rated by customers",
+      "value": "4.8 out of 5 on Google from around 30 reviews"
+    }
+  ],
+  "reviewSummary": "What people said about Capuchin Coffee, in their own words:",
+  "reviews": [
+    {
+      "quote": "A brilliant neighbourhood coffee place by people who care.",
+      "author": "Matthew T.",
+      "source": "Google review"
+    },
+    {
+      "quote": "Amazing food and service as always, always something new and delicious on the special menu.",
+      "author": "Chris F.",
+      "source": "Google review"
+    },
+    {
+      "quote": "The drink and food menu offer a wide variety with something for everyone.",
+      "author": "Lizzie C.",
+      "source": "Google review"
+    }
+  ],
+  "link": "https://www.capuchincoffee.co.uk/"
+}

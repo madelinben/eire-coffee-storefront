@@ -1,0 +1,234 @@
+---
+import { EVENT_TYPES } from '@/features/booking-request/utilities/booking-message';
+
+interface Props {
+  packageNames: string[];
+  /** Days the trailer is committed to a private event: the form refuses them. */
+  bookedDates: string[];
+  /** Days with a public stop: the form warns but allows them. */
+  busyDates: string[];
+  leadTimeDays: number;
+  email?: string | undefined;
+  whatsapp?: string | undefined;
+  instagram?: string | undefined;
+}
+const { packageNames, bookedDates, busyDates, leadTimeDays, email, whatsapp, instagram } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_BOOKING_ENDPOINT ?? '';
+const fields = [
+  { name: 'name', label: 'Your name', type: 'text', autocomplete: 'name', required: true },
+  { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', required: true },
+  { name: 'phone', label: 'Phone (optional)', type: 'tel', autocomplete: 'tel', required: false },
+] as const;
+---
+
+<form
+  novalidate
+  data-booking-form
+  data-booked={bookedDates.join(',')}
+  data-busy={busyDates.join(',')}
+  data-lead={leadTimeDays}
+  data-email={email}
+  data-whatsapp={whatsapp}
+  data-instagram={instagram}
+  data-endpoint={endpoint}
+  class="card grid gap-6 p-6 sm:p-10"
+  aria-labelledby="booking-title"
+>
+  <h2 id="booking-title" class="text-3xl sm:text-4xl">Tell us about your event</h2>
+  <p role="alert" data-error-summary class="hidden rounded-2xl bg-destructive/10 p-4 font-semibold text-foreground"></p>
+
+  <div class="grid gap-6 sm:grid-cols-2">
+    {fields.map((field) => (
+      <div class={field.name === 'name' ? 'sm:col-span-2' : ''}>
+        <label for={`book-${field.name}`} class="mb-2 block text-sm font-semibold">{field.label}</label>
+        <input id={`book-${field.name}`} name={field.name} type={field.type} autocomplete={field.autocomplete} class="field" aria-describedby={`error-${field.name}`} />
+        <p id={`error-${field.name}`} data-error-for={field.name} class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+      </div>
+    ))}
+    <div>
+      <label for="book-eventType" class="mb-2 block text-sm font-semibold">Kind of event</label>
+      <select id="book-eventType" name="eventType" class="field" aria-describedby="error-eventType">
+        <option value="">Choose…</option>
+        {EVENT_TYPES.map((type) => <option value={type}>{type}</option>)}
+      </select>
+      <p id="error-eventType" data-error-for="eventType" class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+    </div>
+    <div>
+      <label for="book-date" class="mb-2 block text-sm font-semibold">Date</label>
+      <input id="book-date" name="date" type="date" class="field" aria-describedby="error-date date-note" />
+      <p id="error-date" data-error-for="date" class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+      <p id="date-note" data-date-note class="mt-1 hidden text-sm text-muted-foreground"></p>
+    </div>
+    <div>
+      <label for="book-startTime" class="mb-2 block text-sm font-semibold">Start time (optional)</label>
+      <input id="book-startTime" name="startTime" type="time" class="field" />
+    </div>
+    <div>
+      <label for="book-hours" class="mb-2 block text-sm font-semibold">Hours of service (optional)</label>
+      <input id="book-hours" name="hours" type="number" min="0.5" step="0.5" inputmode="decimal" class="field" aria-describedby="error-hours" />
+      <p id="error-hours" data-error-for="hours" class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+    </div>
+    <div>
+      <label for="book-guests" class="mb-2 block text-sm font-semibold">Guests (optional)</label>
+      <input id="book-guests" name="guests" type="number" min="1" step="1" inputmode="numeric" class="field" aria-describedby="error-guests" />
+      <p id="error-guests" data-error-for="guests" class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+    </div>
+    <div>
+      <label for="book-packageName" class="mb-2 block text-sm font-semibold">Package</label>
+      <select id="book-packageName" name="packageName" class="field">
+        <option value="Not sure yet">Not sure yet</option>
+        {packageNames.map((name) => <option value={name}>{name}</option>)}
+      </select>
+    </div>
+    <div class="sm:col-span-2">
+      <label for="book-location" class="mb-2 block text-sm font-semibold">Where is it? (venue, town or postcode)</label>
+      <input id="book-location" name="location" type="text" autocomplete="street-address" class="field" aria-describedby="error-location" />
+      <p id="error-location" data-error-for="location" class="mt-1 hidden text-sm font-semibold text-destructive"></p>
+    </div>
+    <div class="sm:col-span-2">
+      <label for="book-message" class="mb-2 block text-sm font-semibold">Anything else we should know? (optional)</label>
+      <textarea id="book-message" name="message" rows="4" class="field"></textarea>
+    </div>
+  </div>
+
+  <!-- Spam trap: people never see or fill this in. -->
+  <div class="absolute -left-[9999px]" aria-hidden="true">
+    <label for="book-website">Leave this empty</label>
+    <input id="book-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div>
+    <button type="submit" class="btn btn-primary press">Send my request</button>
+    <p class="mt-3 max-w-prose text-sm text-muted-foreground">We use these details only to reply to your request. We aim to answer within two working days. This is a request, not a booking: nothing is confirmed until we reply.</p>
+  </div>
+
+  <div data-result tabindex="-1" class="hidden rounded-2xl bg-muted p-6" aria-live="polite">
+    <h3 data-result-title class="text-2xl">Your request</h3>
+    <p data-result-text class="mt-2 max-w-prose"></p>
+    <div data-result-actions class="mt-4 flex flex-wrap gap-3"></div>
+    <label for="book-copy" class="mt-5 block text-sm font-semibold">Your request</label>
+    <textarea id="book-copy" data-result-copy readonly rows="9" class="field mt-2 font-mono text-sm"></textarea>
+    <button type="button" data-copy class="btn btn-outline press mt-3">Copy request</button>
+    <span data-copy-status role="status" class="ml-3 text-sm font-semibold"></span>
+  </div>
+</form>
+
+<script>
+  import { buildBookingMessage, mailtoUrl, validateBooking, whatsappUrl, type BookingFields } from '@/features/booking-request/utilities/booking-message';
+
+  const form = document.querySelector<HTMLFormElement>('[data-booking-form]');
+  if (form) wire(form);
+
+  function wire(form: HTMLFormElement) {
+    const list = (value: string | undefined) => (value ? value.split(',').filter(Boolean) : []);
+    const booked = list(form.dataset.booked);
+    const busy = list(form.dataset.busy);
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date());
+    const dateInput = form.elements.namedItem('date') as HTMLInputElement;
+    const note = form.querySelector<HTMLElement>('[data-date-note]');
+    const lead = Number(form.dataset.lead ?? 0);
+    dateInput.min = today;
+
+    const show = (element: HTMLElement | null, text: string) => {
+      if (!element) return;
+      element.textContent = text;
+      element.classList.toggle('hidden', text === '');
+    };
+
+    dateInput.addEventListener('change', () => {
+      const date = dateInput.value;
+      const soonest = new Date(`${today}T12:00:00Z`);
+      soonest.setUTCDate(soonest.getUTCDate() + lead);
+      const soon = date !== '' && date < soonest.toISOString().slice(0, 10);
+      show(note, busy.includes(date) ? 'We have a public stop that day, but we may still be able to help. Tell us more in your request.' : soon ? `We like ${lead} days' notice, but ask anyway: we will do our best.` : '');
+    });
+
+    const read = (): BookingFields => {
+      const data = new FormData(form);
+      const value = (name: string) => String(data.get(name) ?? '');
+      return { name: value('name'), email: value('email'), phone: value('phone'), eventType: value('eventType'), date: value('date'), startTime: value('startTime'), hours: value('hours'), guests: value('guests'), location: value('location'), packageName: value('packageName'), message: value('message') };
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const fields = read();
+      const honeypot = String(new FormData(form).get('website') ?? '');
+      const errors = validateBooking(fields, booked, today);
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((element) => {
+        const message = errors[element.dataset.errorFor as keyof BookingFields] ?? '';
+        show(element, message);
+        const control = form.elements.namedItem(element.dataset.errorFor ?? '');
+        if (control instanceof HTMLElement) control.setAttribute('aria-invalid', message === '' ? 'false' : 'true');
+      });
+      const summary = form.querySelector<HTMLElement>('[data-error-summary]');
+      const first = Object.keys(errors)[0];
+      show(summary, first ? `Please fix ${Object.keys(errors).length === 1 ? 'one thing' : `${Object.keys(errors).length} things`} below.` : '');
+      if (first) {
+        (form.elements.namedItem(first) as HTMLElement | null)?.focus();
+        return;
+      }
+
+      const text = buildBookingMessage(fields);
+      const result = form.querySelector<HTMLElement>('[data-result]');
+      const title = form.querySelector<HTMLElement>('[data-result-title]');
+      const body = form.querySelector<HTMLElement>('[data-result-text]');
+      const actions = form.querySelector<HTMLElement>('[data-result-actions]');
+      const copy = form.querySelector<HTMLTextAreaElement>('[data-result-copy]');
+      if (!result || !title || !body || !actions || !copy) return;
+      copy.value = text;
+      actions.replaceChildren();
+      const reveal = (heading: string, paragraph: string) => {
+        title.textContent = heading;
+        body.textContent = paragraph;
+        result.classList.remove('hidden');
+        result.focus();
+      };
+
+      if (honeypot !== '') return reveal('Thank you', 'Your request has been sent.');
+
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        try {
+          const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ ...fields, message: text, subject: 'Booking request: Éire Coffee trailer' }) });
+          if (response.ok) {
+            form.querySelector<HTMLElement>('[data-copy]')?.classList.add('hidden');
+            copy.classList.add('hidden');
+            copy.labels?.forEach((label) => label.classList.add('hidden'));
+            return reveal('Request sent. Thank you!', 'We will reply to the email address you gave, usually within two working days.');
+          }
+        } catch {
+          // Fall through to the manual options below.
+        }
+      }
+
+      const link = (label: string, href: string) => {
+        const anchor = document.createElement('a');
+        anchor.href = href;
+        anchor.rel = 'noopener';
+        anchor.className = 'btn btn-primary press';
+        anchor.textContent = label;
+        actions.append(anchor);
+      };
+      if (form.dataset.email) link('Send by email', mailtoUrl(form.dataset.email, 'Booking request: Éire Coffee trailer', text));
+      if (form.dataset.whatsapp) link('Send on WhatsApp', whatsappUrl(form.dataset.whatsapp, text));
+      if (form.dataset.instagram) link('Message us on Instagram', form.dataset.instagram);
+      reveal(
+        endpoint ? 'We could not send that automatically' : 'Nearly there: send us your request',
+        actions.childElementCount > 0 ? 'Choose how to send it. Your details are below, so you can also copy and paste them.' : 'Copy the request below and send it to us any way you like.',
+      );
+    });
+
+    form.querySelector<HTMLElement>('[data-copy]')?.addEventListener('click', async () => {
+      const copy = form.querySelector<HTMLTextAreaElement>('[data-result-copy]');
+      const status = form.querySelector<HTMLElement>('[data-copy-status]');
+      if (!copy || !status) return;
+      try {
+        await navigator.clipboard.writeText(copy.value);
+        status.textContent = 'Copied.';
+      } catch {
+        copy.select();
+        status.textContent = 'Press Ctrl+C or Cmd+C to copy.';
+      }
+    });
+  }
+</script>

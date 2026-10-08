@@ -1,0 +1,18 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import ContactLinks from '@/features/contact-hub/views/components/ContactLinks.astro';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+import { SERVICE_AREA } from '@/data/Content/settings';
+---
+
+<PageLayout
+  title="Contact Éire Coffee"
+  description="Get in touch with Éire Coffee by Instagram, email or WhatsApp, or send a booking request for the mobile coffee trailer in Chester."
+  pageType="ContactPage"
+  breadcrumbs={[{ name: 'Contact', path: '/contact/' }]}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title="Say hello" kicker="Contact" lede={`Based in Chester, serving ${SERVICE_AREA}. Message us, or send a booking request.`} />
+  <section class="mx-auto max-w-4xl px-6 section-y"><ContactLinks /></section>
+</PageLayout>

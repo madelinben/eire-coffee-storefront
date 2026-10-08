@@ -1,0 +1,63 @@
+{
+  "intro": "A short menu, made properly. Ask at the hatch about milk alternatives and anything seasonal.",
+  "sections": [
+    {
+      "name": "Espresso",
+      "note": "",
+      "items": [
+        {
+          "name": "Espresso",
+          "description": "Short, sweet and strong.",
+          "price": ""
+        },
+        {
+          "name": "Americano",
+          "description": "Espresso topped with hot water.",
+          "price": ""
+        },
+        {
+          "name": "Flat white",
+          "description": "Double espresso with velvety steamed milk.",
+          "price": ""
+        },
+        {
+          "name": "Latte",
+          "description": "Espresso and plenty of steamed milk.",
+          "price": ""
+        },
+        {
+          "name": "Cappuccino",
+          "description": "Espresso with a thick cloud of foam.",
+          "price": ""
+        }
+      ]
+    },
+    {
+      "name": "Something warm",
+      "note": "",
+      "items": [
+        {
+          "name": "Hot chocolate",
+          "description": "Rich and not too sweet.",
+          "price": ""
+        },
+        {
+          "name": "Tea",
+          "description": "A proper pot of tea, strong enough to stand a spoon in.",
+          "price": ""
+        }
+      ]
+    },
+    {
+      "name": "Cold",
+      "note": "",
+      "items": [
+        {
+          "name": "Iced latte",
+          "description": "Espresso, cold milk and ice.",
+          "price": ""
+        }
+      ]
+    }
+  ]
+}

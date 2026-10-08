@@ -1,0 +1,85 @@
+---
+/**
+ * Flat, single-colour brand illustrations in the lighthouse-stencil style of the @eire_coffee feed.
+ * Drawn in `currentColor`, so the parent sets the ink; `cut` is the colour of the knocked-out windows and rock cracks (the ground behind).
+ * Placeholders until the real logo and photography arrive. Decorative: the facts are real text elsewhere.
+ */
+interface Props {
+  name: 'lighthouse' | 'trailer' | 'cup' | 'shamrock';
+  class?: string;
+  /** Colour of the gaps, usually the background the art sits on. */
+  cut?: string;
+}
+const { name, class: className = '', cut = 'var(--background)' } = Astro.props;
+---
+
+{name === 'lighthouse' && (
+  <svg viewBox="0 0 400 480" class={className} aria-hidden="true" focusable="false" style={`--cut:${cut}`}>
+    <g class="beam" fill="var(--accent)" opacity="0.5"><path d="M200 150 L420 70 L420 230 Z" /></g>
+    <g class="gull" style="--d:-2s" fill="currentColor"><path transform="translate(40 120)" d="M0 8 Q14 -6 28 6 Q42 -6 56 8 Q42 2 28 14 Q14 2 0 8Z" /></g>
+    <g class="gull" style="--d:-5s" fill="currentColor"><path transform="translate(96 186) scale(.6)" d="M0 8 Q14 -6 28 6 Q42 -6 56 8 Q42 2 28 14 Q14 2 0 8Z" /></g>
+    <g fill="currentColor">
+      <circle cx="200" cy="84" r="7" /><rect x="198" y="84" width="4" height="14" />
+      <path d="M166 134 Q200 92 234 134Z" />
+      <rect x="170" y="134" width="60" height="38" />
+      <rect x="146" y="168" width="108" height="7" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((post) => <rect x={148 + post * 14} y="175" width="4" height="16" />)}
+      <rect x="146" y="191" width="108" height="10" />
+      <path d="M160 201 H240 L268 428 H132Z" />
+      <path d="M40 470 L84 440 L128 427 L170 438 L212 424 L258 432 L304 446 L360 470Z" />
+    </g>
+    <g fill="var(--cut)">
+      <rect x="188" y="141" width="24" height="26" rx="2" />
+      <rect x="186" y="250" width="28" height="44" rx="14" />
+      <path d="M180 428 V392 Q200 366 220 392 V428Z" />
+    </g>
+    <path d="M60 462 L110 446 M150 446 L196 456 M232 440 L276 452 M104 466 L150 458" stroke="var(--cut)" stroke-width="3" stroke-linecap="round" fill="none" />
+    <path d="M188 160 Q200 146 212 160Q206 168 200 168Q194 168 188 160Z" fill="currentColor" />
+  </svg>
+)}
+
+{name === 'trailer' && (
+  <svg viewBox="0 0 420 260" class={className} aria-hidden="true" focusable="false" style={`--cut:${cut}`}>
+    <g fill="currentColor">
+      <rect x="30" y="64" width="300" height="126" rx="16" />
+      <path d="M330 150 L392 172 Q404 176 404 188 H330Z" />
+      <path d="M96 76 H272 L286 54 H82Z" />
+      <rect x="96" y="156" width="176" height="10" rx="3" />
+      <circle cx="150" cy="198" r="30" /><circle cx="262" cy="198" r="30" />
+    </g>
+    <g fill="var(--cut)">
+      <rect x="102" y="92" width="164" height="60" rx="6" />
+      <circle cx="150" cy="198" r="13" /><circle cx="262" cy="198" r="13" />
+      {[0, 1, 2, 3, 4, 5].map((stripe) => <rect x={92 + stripe * 31} y="56" width="14" height="18" opacity="0.9" />)}
+    </g>
+    <g fill="currentColor"><path d="M158 142 q4-20 16-20 h22 q12 0 16 20z" /><rect x="214" y="126" width="5" height="16" /></g>
+    <g class="steam" fill="none" stroke="var(--cut)" stroke-width="3" stroke-linecap="round"><path d="M180 116 q-6 -8 0 -14 t0 -14" /></g>
+  </svg>
+)}
+
+{name === 'cup' && (
+  <svg viewBox="0 0 240 240" class={className} aria-hidden="true" focusable="false" style={`--cut:${cut}`}>
+    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+      <path class="steam" style="--d:0s" d="M96 80 q-12-14 0-28 t0-28" />
+      <path class="steam" style="--d:-1.2s" d="M124 84 q-12-14 0-28 t0-28" />
+      <path class="steam" style="--d:-2.4s" d="M152 80 q-12-14 0-28 t0-28" />
+    </g>
+    <g fill="currentColor">
+      <path d="M52 108 H188 V150 Q188 202 120 202 Q52 202 52 150Z" />
+      <path d="M188 120 H208 Q226 120 226 142 Q226 166 198 168 V154 Q210 152 210 142 Q210 134 188 134Z" />
+      <ellipse cx="120" cy="214" rx="86" ry="9" />
+    </g>
+    <path d="M70 126 Q70 124 96 124 H144 Q170 124 170 126" stroke="var(--cut)" stroke-width="4" stroke-linecap="round" fill="none" />
+  </svg>
+)}
+
+{name === 'shamrock' && (
+  <svg viewBox="-50 -50 100 110" class={className} aria-hidden="true" focusable="false">
+    <g fill="currentColor">
+      {[0, 120, 240].map((angle) => (
+        <path transform={`rotate(${angle})`} d="M0 -2 C-3 -12 -24 -16 -24 -30 C-24 -42 -8 -44 0 -32 C8 -44 24 -42 24 -30 C24 -16 3 -12 0 -2Z" />
+      ))}
+    </g>
+    <path d="M0 6 Q4 26 -3 40" stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="none" />
+  </svg>
+)}

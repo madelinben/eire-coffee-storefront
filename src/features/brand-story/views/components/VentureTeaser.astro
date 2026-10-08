@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import { siteContent, pictureImages } from '@/data/Content/site-content';
+import { withBase } from '@/utilities/with-base';
+
+const { title, intro, picture } = siteContent.venture;
+const image = picture === '' ? undefined : pictureImages.get(picture);
+const alt = siteContent.pictures.find((candidate) => candidate.id === picture)?.alt ?? '';
+---
+
+<section class="mx-auto grid max-w-6xl items-center gap-12 px-6 section-y lg:grid-cols-2">
+  {image && (
+    <div data-reveal="left" class="overflow-hidden rounded-3xl">
+      <Image src={image} {alt} widths={[480, 720, 960]} sizes="(min-width: 1024px) 45vw, 90vw" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+    </div>
+  )}
+  <div class={image ? '' : 'lg:col-span-2'}>
+    <p data-reveal class="eyebrow text-muted-foreground">Our story</p>
+    <h2 data-reveal class="mt-4 text-4xl sm:text-6xl">{title}</h2>
+    <p data-reveal class="mt-6 max-w-prose text-lg">{intro}</p>
+    <p data-reveal class="mt-8"><a href={withBase('/our-story/')} class="btn btn-outline press">Read our story</a></p>
+  </div>
+</section>

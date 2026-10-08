@@ -1,0 +1,23 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+import OrnamentDivider from '@/features/site-shell/views/components/OrnamentDivider.astro';
+import MenuSections from '@/features/menu-browse/views/components/MenuSections.astro';
+import { siteContent } from '@/data/Content/site-content';
+import { withBase } from '@/utilities/with-base';
+---
+
+<PageLayout
+  title="Coffee Menu"
+  description="The Éire Coffee menu: espresso, flat whites and warm drinks, made properly from a mobile trailer in Chester. See what is on at the hatch."
+  breadcrumbs={[{ name: 'Menu', path: '/menu/' }]}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title="The menu" kicker="What we pour" lede={siteContent.menu.intro} art="cup" />
+  <section class="mx-auto max-w-6xl px-6 section-y"><MenuSections /></section>
+  <OrnamentDivider />
+  <section class="mx-auto max-w-6xl px-6 pb-20 text-center">
+    <p class="text-lg">Ready for one? <a class="font-semibold underline underline-offset-4" href={withBase('/calendar/')}>Find the trailer</a>, or <a class="font-semibold underline underline-offset-4" href={withBase('/book/')}>book us for your event</a>.</p>
+  </section>
+</PageLayout>

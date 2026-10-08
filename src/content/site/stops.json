@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Sample weekly pitch",
+    "date": "2026-10-10",
+    "startTime": "09:00",
+    "endTime": "14:00",
+    "kind": "pitch",
+    "repeatWeeks": 52,
+    "venueName": "Sample pitch: replace in the admin",
+    "streetAddress": "",
+    "postalCode": "",
+    "locality": "Chester",
+    "note": "Sample stop. Edit or delete it in the admin, then add the real ones.",
+    "link": ""
+  },
+  {
+    "title": "Sample market day",
+    "date": "2026-10-17",
+    "startTime": "10:00",
+    "endTime": "16:00",
+    "kind": "market",
+    "repeatWeeks": 0,
+    "venueName": "Sample market: replace in the admin",
+    "streetAddress": "",
+    "postalCode": "",
+    "locality": "Chester",
+    "note": "Sample stop. Edit or delete it in the admin.",
+    "link": ""
+  },
+  {
+    "title": "Private event",
+    "date": "2026-10-24",
+    "startTime": "12:00",
+    "endTime": "17:00",
+    "kind": "private",
+    "repeatWeeks": 0,
+    "venueName": "",
+    "streetAddress": "",
+    "postalCode": "",
+    "locality": "",
+    "note": "",
+    "link": ""
+  }
+]

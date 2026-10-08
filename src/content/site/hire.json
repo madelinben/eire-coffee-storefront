@@ -1,0 +1,43 @@
+{
+  "intro": "Our trailer travels. Book it for a wedding, a festival, a launch, a school fair or a staff morning and we will pull up, serve and leave nothing behind but happy people. These packages are a starting point: tell us what you need and we will shape it around your day.",
+  "packages": [
+    {
+      "name": "Pop-up",
+      "bestFor": "Birthdays, small gatherings and office mornings",
+      "summary": "A short, friendly service for a smaller crowd.",
+      "includes": [
+        "Up to two hours of service",
+        "Our full drinks menu",
+        "Cups and lids included"
+      ]
+    },
+    {
+      "name": "Celebration",
+      "bestFor": "Weddings, christenings and parties",
+      "summary": "The trailer is part of your day, with time to enjoy it.",
+      "includes": [
+        "Up to four hours of service",
+        "Our full drinks menu",
+        "Friendly staff",
+        "Set-up and tidy-down"
+      ]
+    },
+    {
+      "name": "Festival and market",
+      "bestFor": "Organisers who need a reliable coffee pitch",
+      "summary": "A full day on your site, with everything we need to run all day.",
+      "includes": [
+        "Full-day trading",
+        "Own power and water arrangements",
+        "Pitch arrangements agreed in advance"
+      ]
+    }
+  ],
+  "included": [
+    "A fully equipped, self-contained trailer",
+    "Friendly, experienced baristas",
+    "Set-up and tidy-down"
+  ],
+  "leadTimeDays": 14,
+  "travelNote": "Based in Chester and happy to travel across the North West. Further afield is possible, so ask."
+}

@@ -1,0 +1,25 @@
+---
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+
+interface Props {
+  title: string;
+  kicker: string;
+  /** One line under the title. */
+  lede?: string;
+  art?: 'lighthouse' | 'trailer' | 'cup';
+}
+const { title, kicker, lede, art = 'lighthouse' } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-secondary text-secondary-foreground">
+  <div class="mx-auto grid max-w-6xl items-center gap-8 px-6 py-16 sm:py-24 md:grid-cols-[1.4fr_1fr]">
+    <div>
+      <p class="hero-rise eyebrow" style="--i:0">{kicker}</p>
+      <h1 class="hero-rise mt-4 text-5xl sm:text-7xl" style="--i:1">{title}</h1>
+      {lede && <p class="hero-rise mt-6 max-w-xl text-lg" style="--i:2">{lede}</p>}
+    </div>
+    <div aria-hidden="true" class="art-in hidden justify-self-end text-primary md:block">
+      <Illustration name={art} cut="var(--secondary)" class={art === 'trailer' ? 'w-80' : art === 'cup' ? 'w-56' : 'h-64 w-auto'} />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,13 @@
+---
+import { requireSite } from '@/utilities/require-site';
+import { toAbsolute, withBase } from '@/utilities/with-base';
+
+const feed = withBase('/eire-coffee-stops.ics');
+const webcal = toAbsolute(requireSite(Astro.site), '/eire-coffee-stops.ics').replace(/^https?:/, 'webcal:');
+---
+
+<div class="flex flex-wrap gap-3">
+  <a href={webcal} class="btn btn-primary press">Subscribe in your calendar</a>
+  <a href={feed} download class="btn btn-outline press">Download calendar file</a>
+</div>
+<p class="mt-4 max-w-prose text-sm text-muted-foreground">Subscribing keeps your calendar up to date as we add stops. The file lists public stops only and refreshes whenever the site is rebuilt.</p>

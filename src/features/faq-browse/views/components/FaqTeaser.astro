@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase, withBaseInHtml } from '@/utilities/with-base';
+
+const entries = (await getCollection('faqs')).sort((a, b) => a.data.position - b.data.position).slice(0, 3);
+const items = entries.map((entry) => ({ entry, html: withBaseInHtml(entry.rendered?.html ?? '') }));
+---
+
+{items.length > 0 && (
+  <section class="mx-auto grid max-w-6xl gap-10 px-6 section-y lg:grid-cols-[1fr_1.4fr]">
+    <div>
+      <h2 data-reveal class="text-4xl sm:text-6xl">Quick answers</h2>
+      <p data-reveal class="mt-4 max-w-prose text-lg">New here? Start with these, or read them all.</p>
+      <a data-reveal href={withBase('/faqs/')} class="btn btn-outline press mt-6">All FAQs</a>
+    </div>
+    <div class="flex flex-col gap-3">
+      {items.map(({ entry, html }) => (
+        <details data-reveal="right" class="group card p-5 open:bg-muted">
+          <summary class="flex min-h-10 cursor-pointer items-center justify-between gap-4 font-display text-xl">
+            {entry.data.question}
+            <span aria-hidden="true" class="text-2xl text-accent transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <div class="mt-3 text-pretty text-muted-foreground" set:html={html} />
+        </details>
+      ))}
+    </div>
+  </section>
+)}

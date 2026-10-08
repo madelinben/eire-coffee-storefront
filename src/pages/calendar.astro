@@ -1,0 +1,74 @@
+---
+import { requireSite } from '@/utilities/require-site';
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+import OrnamentDivider from '@/features/site-shell/views/components/OrnamentDivider.astro';
+import NextStopCard from '@/features/stop-browse/views/components/NextStopCard.astro';
+import CalendarMonth from '@/features/stop-browse/views/components/CalendarMonth.astro';
+import StopCard from '@/features/stop-browse/views/components/StopCard.astro';
+import SubscribeLinks from '@/features/stop-browse/views/components/SubscribeLinks.astro';
+import { stopEventNode } from '@/features/site-seo/utilities/schema-nodes';
+import { stops } from '@/data/Stop/stops';
+import { addDays, londonToday, monthsFrom, nextPublicStop, splitStops } from '@/domain/stop/stop-timing';
+import { siteRoot, toAbsolute, withBase } from '@/utilities/with-base';
+
+// The calendar looks three months ahead; repeating stops that run for a year do not fill the page.
+const HORIZON_DAYS = 90;
+const now = new Date();
+const site = requireSite(Astro.site);
+const today = londonToday(now);
+const horizon = addDays(today, HORIZON_DAYS);
+const upcoming = splitStops(stops, now).upcoming.filter((stop) => stop.date <= horizon);
+const next = nextPublicStop(stops, now);
+const image = toAbsolute(site, '/og-default.png');
+const url = toAbsolute(site, '/calendar/');
+---
+
+<PageLayout
+  title="Where Is the Trailer? Calendar"
+  description="See where the Éire Coffee trailer will be next: markets, pitches and festivals across Chester and the North West. Subscribe to the calendar."
+  pageType="CollectionPage"
+  breadcrumbs={[{ name: 'Find us', path: '/calendar/' }]}
+  schema={upcoming.filter((stop) => stop.kind !== 'private').slice(0, 5).map((stop) => stopEventNode({ origin: siteRoot(site), url, image, stop }))}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title="Find the trailer" kicker="Calendar" lede="Every public stop, with the time and place. Add them to your own calendar so you never miss a flat white." art="trailer" />
+
+  <section class="mx-auto grid max-w-6xl gap-10 px-6 section-y lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+    <NextStopCard stop={next} />
+    <div>
+      <h2 class="text-3xl sm:text-4xl">Keep up with us</h2>
+      <p class="mb-6 mt-3 max-w-prose">Stops are added week by week. Subscribe once and your calendar stays current, or add single stops below.</p>
+      <SubscribeLinks />
+    </div>
+  </section>
+
+  <OrnamentDivider />
+
+  {upcoming.length === 0 ? (
+    <section class="mx-auto max-w-3xl px-6 section-y">
+      <h2 class="text-3xl sm:text-4xl">No stops listed yet</h2>
+      <p class="mt-4 max-w-prose">We are lining up the next ones. Follow us on Instagram to hear first, or <a class="font-semibold underline" href={withBase('/book/')}>ask us to come to your event</a>.</p>
+    </section>
+  ) : (
+    <>
+      <section class="mx-auto hidden max-w-6xl px-6 section-y md:block" aria-labelledby="months-title">
+        <h2 id="months-title" class="sr-only">Calendar by month</h2>
+        <div class="grid gap-14">
+          {monthsFrom(now, 3).map(({ year, month }) => <CalendarMonth year={year} month={month} stops={upcoming} today={today} />)}
+        </div>
+      </section>
+      <section class="mx-auto max-w-6xl px-6 section-y" aria-labelledby="list-title">
+        <h2 id="list-title" class="text-3xl sm:text-5xl">Every stop</h2>
+        <ul class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {upcoming.map((stop, index) => <StopCard stop={stop} reveal={index >= 3} />)}
+        </ul>
+      </section>
+    </>
+  )}
+
+  <section class="mx-auto max-w-6xl px-6 pb-20">
+    <p class="card max-w-2xl p-6">Want the trailer at your own event? <a class="font-semibold underline underline-offset-4" href={withBase('/book/')}>Send us a booking request.</a></p>
+  </section>
+</PageLayout>

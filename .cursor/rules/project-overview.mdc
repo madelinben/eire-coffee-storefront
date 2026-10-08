@@ -1,0 +1,54 @@
+---
+description: Project objective, import law, on-demand rule table
+alwaysApply: true
+---
+
+# eire-coffee-storefront
+
+Website for Éire Coffee Co., a mobile coffee trailer based in Chester with an Irish brand vision (good coffee, great craic, céad míle fáilte). Visitors want to know *where is the trailer*, to *book it for an event*, to see the menu, or to buy beans and merchandise. Every page earns its place by answering one of those fast. Calm, premium look: sage and forest green on cream, a serif display face, a lighthouse-and-shamrock motif. Lowest possible running cost.
+
+## Workspaces & import law
+
+- **App root (this folder)** — product: `src/pages/`, `src/features/`, `src/data/`, `src/services/shopify/`, `src/stores/`, `src/content/`, `src/utilities/`
+- No shared packages, no `packages/*` (single standalone app)
+- Shopify is the commerce backend, outside this repo. No server code here
+
+Layer boundaries + `import/no-cycle` in the lint config (`layers.mdc`):
+
+```
+page / feature → data, services, stores
+data → dto, services
+services → utilities (NOT data)
+```
+
+Feature folder (`src/features/<entity>-<objective>/`, noun-first: `product-browse` not `browse-products`): `models/ views/components/ hooks/ api/ utilities/ types/ tests/ config.ts`. Omit empty dirs. Business rules live in Shopify.
+
+Canonical nouns: stop, booking request, package, venture, order, product, cart. Glossary: `docs/CONTEXT.md`.
+
+## Merchandise (KISS)
+
+No user accounts. Products and cart via the Shopify Storefront API (`src/services/shopify/`); the browser stores only the cart id. Checkout is Shopify-hosted. Orders, payments, stock and staff notifications are Shopify’s (`docs/environment/shopify.md`).
+
+## Always-on web rules
+
+`seo.mdc` (metadata, Open Graph, schema.org) and `performance.mdc` (Core Web Vitals, bundle budgets) apply to every page and are enforced by `pnpm check:site` after `pnpm build`.
+
+## On-demand rules (read before touching matching paths)
+
+| File | Scope |
+|---|---|
+| `theme.mdc` | styles, tokens, motion |
+| `copy.mdc` | UI text |
+| `accessibility.mdc` | components, pages |
+| `interaction.mdc` | components, pages |
+| `error-pages.mdc` | 404 / 500 pages |
+| `testing.mdc` | tests, e2e |
+| `generated.mdc` | `generated/**` |
+| `content.mdc` | `src/content/**`, `src/data/Content/**`, the admin |
+
+## Gates before merge
+
+- `pnpm check` green on every push (pre-push hook + CI + host build)
+- `pnpm predeploy` green before merge
+- Sub-plan checkbox synced (if using the master/sub-plan SDLC flow)
+- After push: PR body filled from `.github/pull_request_template.md`

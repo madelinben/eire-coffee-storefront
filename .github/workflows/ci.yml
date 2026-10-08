@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md']
+  pull_request:
+    paths-ignore: ['docs/**', '**/*.md']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      # CI builds against the repo's mock Storefront API, so it needs no store. Real store: verified on the preview deploy.
+      PUBLIC_SHOPIFY_STOREFRONT_URL: http://localhost:4400
+      # Canonical origin for the SEO checks. Production builds also set SEO_STRICT=1.
+      SITE_ORIGIN: ${{ vars.SITE_ORIGIN || 'http://localhost:4321' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Start mock Storefront API
+        run: node scripts/mock-storefront.mjs &
+      - name: Build
+        run: pnpm build
+      - name: Site quality (SEO, schema.org, links, size baseline)
+        run: pnpm check:site
+      - name: Install browser for e2e and Lighthouse
+        run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end and accessibility (axe) tests
+        run: pnpm test:e2e
+      - name: Lighthouse CI (Core Web Vitals and category scores)
+        run: pnpm lhci
+      - name: Keep Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          retention-days: 14

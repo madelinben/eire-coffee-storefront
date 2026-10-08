@@ -1,0 +1,51 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+import OrnamentDivider from '@/features/site-shell/views/components/OrnamentDivider.astro';
+import PackageCards from '@/features/booking-request/views/components/PackageCards.astro';
+import BookingForm from '@/features/booking-request/views/components/BookingForm.astro';
+import { socialLinks } from '@/data/Content/settings';
+import { siteContent } from '@/data/Content/site-content';
+import { stops } from '@/data/Stop/stops';
+import { bookingDates } from '@/domain/stop/stop-timing';
+
+const { intro, packages, included, leadTimeDays, travelNote } = siteContent.hire;
+const { booked, busy } = bookingDates(stops, new Date());
+---
+
+<PageLayout
+  title="Book the Coffee Trailer"
+  description="Book the Éire Coffee trailer for your wedding, festival, launch or private event in Chester and across the North West. Send a request in a minute."
+  pageType="ContactPage"
+  breadcrumbs={[{ name: 'Book the trailer', path: '/book/' }]}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title="Book the trailer" kicker="Weddings, festivals and private events" lede={intro} art="trailer" />
+
+  <section class="mx-auto max-w-6xl px-6 section-y" aria-labelledby="packages-title">
+    <h2 id="packages-title" data-reveal class="text-4xl sm:text-6xl">Ways we can help</h2>
+    <p data-reveal class="mb-12 mt-4 max-w-prose text-lg">{travelNote}</p>
+    <PackageCards packages={packages} />
+    {included.length > 0 && (
+      <ul data-reveal class="mt-10 flex flex-wrap gap-x-8 gap-y-2 text-sm font-semibold">
+        {included.map((item) => <li class="flex items-center gap-3"><span aria-hidden="true" class="size-1.5 rotate-45 bg-accent"></span>{item}</li>)}
+      </ul>
+    )}
+  </section>
+
+  <OrnamentDivider />
+
+  <section class="mx-auto max-w-3xl px-6 section-y">
+    <BookingForm
+      packageNames={packages.map((item) => item.name)}
+      bookedDates={booked}
+      busyDates={busy}
+      leadTimeDays={leadTimeDays}
+      email={socialLinks.email}
+      whatsapp={socialLinks.whatsappNumber}
+      instagram={socialLinks.instagram}
+    />
+    <p class="mt-6 text-center text-sm text-muted-foreground">We like about {leadTimeDays} days' notice, and more for weddings and summer weekends.</p>
+  </section>
+</PageLayout>

@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import { siteContent, pictureImages } from '@/data/Content/site-content';
+import { withBase } from '@/utilities/with-base';
+
+const { paragraphs, picture, highlights, facts, reviewSummary, reviews, link } = siteContent.venture;
+const image = picture === '' ? undefined : pictureImages.get(picture);
+const alt = siteContent.pictures.find((candidate) => candidate.id === picture)?.alt ?? '';
+---
+
+<section class="mx-auto grid max-w-6xl items-start gap-12 px-6 section-y lg:grid-cols-[1.1fr_0.9fr]">
+  <div class="space-y-6 text-lg">
+    {paragraphs.map((text) => <p data-reveal>{text}</p>)}
+    <p data-reveal class="flex flex-wrap gap-3 pt-2">
+      <a href={withBase('/calendar/')} class="btn btn-primary press">Find the trailer</a>
+      {link && <a href={link} rel="noopener" class="btn btn-outline press">See the Capuchin Coffee site</a>}
+    </p>
+  </div>
+  {image && (
+    <figure data-reveal="right">
+      <Image src={image} {alt} widths={[480, 720, 960]} sizes="(min-width: 1024px) 40vw, 90vw" loading="eager" decoding="async" class="aspect-[4/5] w-full rounded-t-[999px] object-cover" />
+    </figure>
+  )}
+</section>
+
+{highlights.length > 0 && (
+  <section class="mx-auto max-w-6xl px-6 pb-8" aria-labelledby="highlights-title">
+    <h2 id="highlights-title" data-reveal class="text-4xl sm:text-5xl">What we did first</h2>
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2">
+      {highlights.map((item, index) => (
+        <li data-reveal style={`--reveal-delay:${(index % 2) * 90}ms`} class="card p-7">
+          <h3 class="text-2xl text-primary">{item.title}</h3>
+          <p class="mt-3 text-muted-foreground">{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{facts.length > 0 && (
+  <section class="mx-auto max-w-6xl px-6 section-y" aria-labelledby="facts-title">
+    <h2 id="facts-title" data-reveal class="text-4xl sm:text-5xl">At a glance</h2>
+    <dl class="mt-10 grid gap-x-10 sm:grid-cols-2">
+      {facts.map((fact) => (
+        <div data-reveal class="border-t border-border py-5">
+          <dt class="eyebrow text-muted-foreground">{fact.label}</dt>
+          <dd class="mt-2 text-lg">{fact.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+{reviews.length > 0 && (
+  <section class="bg-primary text-primary-foreground" aria-labelledby="reviews-title">
+    <div class="mx-auto max-w-6xl px-6 section-y">
+      <h2 id="reviews-title" data-reveal class="text-4xl sm:text-5xl">Kind words</h2>
+      {reviewSummary && <p data-reveal class="mt-4 max-w-prose text-primary-foreground/85">{reviewSummary}</p>}
+      <ul class="mt-10 grid gap-6 md:grid-cols-3">
+        {reviews.map((review, index) => (
+          <li data-reveal style={`--reveal-delay:${index * 90}ms`}>
+            <figure class="flex h-full flex-col rounded-3xl border border-primary-foreground/20 p-7">
+              <blockquote class="font-display text-xl italic">“{review.quote}”</blockquote>
+              <figcaption class="mt-auto pt-6 text-sm text-primary-foreground/80">{review.author}, {review.source}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

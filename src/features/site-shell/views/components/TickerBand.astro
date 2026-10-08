@@ -1,0 +1,25 @@
+---
+interface Props {
+  words: string[];
+  tone?: 'sage' | 'ink';
+  reverse?: boolean;
+}
+const { words, tone = 'sage', reverse = false } = Astro.props;
+const toneClass = tone === 'sage' ? 'bg-secondary text-secondary-foreground' : 'bg-primary text-primary-foreground';
+---
+
+<!-- Decorative: the same words are on the page as real copy. -->
+<div aria-hidden="true" class={`${toneClass} overflow-hidden py-4`}>
+  <div class="marquee-track flex w-max font-display text-3xl font-medium italic tracking-tight sm:text-5xl" style={`--dir:${reverse ? 'reverse' : 'normal'}`}>
+    {[0, 1].map(() => (
+      <ul class="flex shrink-0 items-center">
+        {words.map((word) => (
+          <li class="flex items-center">
+            <span class="px-6">{word}</span>
+            <span class="size-2 rotate-45 bg-accent"></span>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>

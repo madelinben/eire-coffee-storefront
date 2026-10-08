@@ -1,0 +1,24 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { siteContent } from '@/data/Content/site-content';
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+
+const featured = siteContent.menu.sections.flatMap((section) => section.items).slice(0, 6);
+---
+
+<section class="mx-auto grid max-w-6xl items-center gap-12 px-6 section-y lg:grid-cols-[0.8fr_1.2fr]">
+  <div data-reveal class="hidden justify-self-center text-primary lg:block"><Illustration name="cup" class="w-72" /></div>
+  <div>
+    <p data-reveal class="eyebrow text-muted-foreground">What we pour</p>
+    <h2 data-reveal class="mt-4 text-4xl sm:text-6xl">A short menu, made properly</h2>
+    <ul class="mt-8 grid gap-x-10 sm:grid-cols-2">
+      {featured.map((item) => (
+        <li data-reveal class="border-b border-border py-4">
+          <p class="font-display text-xl">{item.name}</p>
+          {item.description && <p class="mt-1 text-sm text-muted-foreground">{item.description}</p>}
+        </li>
+      ))}
+    </ul>
+    <p data-reveal class="mt-8"><a href={withBase('/menu/')} class="btn btn-outline press">See the full menu</a></p>
+  </div>
+</section>

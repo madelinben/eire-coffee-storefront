@@ -1,0 +1,15 @@
+---
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<span translate="no" class={`inline-flex items-center gap-[0.35em] leading-none ${className}`}>
+  <Illustration name="shamrock" class="h-[0.95em] w-[0.86em] shrink-0 text-accent" />
+  <span class="flex flex-col">
+    <span class="font-display text-[1em] font-semibold tracking-tight">éire</span>
+    <span class="mt-[0.18em] font-sans text-[0.26em] font-semibold uppercase tracking-[0.42em]">coffee co.</span>
+  </span>
+</span>

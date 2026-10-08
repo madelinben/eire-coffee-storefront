@@ -1,0 +1,46 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { SERVICE_AREA, SITE_TAGLINE, socialLinks } from '@/data/Content/settings';
+import Logo from '@/features/site-shell/views/components/Logo.astro';
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+
+const links = [
+  { href: withBase('/calendar/'), label: 'Where is the trailer?' },
+  { href: withBase('/menu/'), label: 'Menu' },
+  { href: withBase('/book/'), label: 'Book the trailer' },
+  { href: withBase('/shop/'), label: 'Shop' },
+  { href: withBase('/our-story/'), label: 'Our story' },
+  { href: withBase('/faqs/'), label: 'FAQs' },
+  { href: withBase('/contact/'), label: 'Contact' },
+];
+const socials = [
+  socialLinks.instagram && { label: 'Instagram', href: socialLinks.instagram },
+  socialLinks.facebook && { label: 'Facebook', href: socialLinks.facebook },
+  socialLinks.tiktok && { label: 'TikTok', href: socialLinks.tiktok },
+].filter((link) => typeof link === 'object');
+---
+
+<footer class="relative overflow-hidden bg-primary text-primary-foreground">
+  <Illustration name="lighthouse" cut="var(--primary)" class="pointer-events-none absolute -bottom-10 -right-10 hidden h-[26rem] w-auto text-secondary opacity-20 md:block" />
+  <div class="relative mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div>
+      <div class="text-6xl"><Logo /></div>
+      <p class="mt-6 font-display text-2xl italic text-accent">{SITE_TAGLINE}</p>
+      <p class="mt-3 max-w-sm text-sm">A mobile coffee trailer based in Chester, serving {SERVICE_AREA}.</p>
+    </div>
+    <nav aria-label="Footer">
+      <h2 class="eyebrow mb-4 text-accent">Explore</h2>
+      <ul class="flex flex-col gap-1">
+        {links.map((link) => <li><a href={link.href} class="inline-flex min-h-10 items-center underline-offset-4 hover:underline">{link.label}</a></li>)}
+      </ul>
+    </nav>
+    {socials.length > 0 && (
+      <div>
+        <h2 class="eyebrow mb-4 text-accent">Follow</h2>
+        <ul class="flex flex-col gap-1">
+          {socials.map((social) => <li><a href={social.href} rel="noopener" class="inline-flex min-h-10 items-center underline-offset-4 hover:underline">{social.label}</a></li>)}
+        </ul>
+      </div>
+    )}
+  </div>
+</footer>

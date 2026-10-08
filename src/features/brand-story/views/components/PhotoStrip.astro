@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+import { siteContent, pictureImages } from '@/data/Content/site-content';
+
+const photos = siteContent.pictures.filter((picture) => picture.gallery && pictureImages.has(picture.id)).slice(0, 6);
+---
+
+{photos.length > 0 && (
+  <section class="mx-auto max-w-6xl px-6 section-y">
+    <h2 data-reveal class="text-4xl sm:text-6xl">On the road</h2>
+    <ul class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+      {photos.map((photo, index) => {
+        const image = pictureImages.get(photo.id);
+        return image && (
+          <li data-reveal="scale" style={`--reveal-delay:${(index % 3) * 90}ms`} class="tilt overflow-hidden rounded-3xl">
+            <Image src={image} alt={photo.alt} widths={[320, 480, 640]} sizes="(min-width: 768px) 31vw, 46vw" loading="lazy" decoding="async" class="aspect-square w-full object-cover" />
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}

@@ -1,0 +1,33 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { formatStopDate, formatTimes, locationText, type Stop } from '@/domain/stop/stop-timing';
+import { mapUrl } from '@/features/stop-browse/utilities/calendar';
+
+interface Props {
+  stop: Stop | undefined;
+  class?: string;
+}
+const { stop, class: className = '' } = Astro.props;
+---
+
+<div class={`rounded-3xl bg-primary p-7 text-primary-foreground sm:p-9 ${className}`}>
+  <p class="eyebrow text-accent">Next stop</p>
+  {stop ? (
+    <>
+      <p class="mt-3 font-display text-3xl sm:text-4xl">{formatStopDate(stop.date)}</p>
+      <p class="mt-1 text-sm font-semibold tabular-nums">{formatTimes(stop)}</p>
+      <p class="mt-4 text-lg">{stop.venueName}</p>
+      <p class="text-primary-foreground/80">{locationText({ ...stop, venueName: '' })}</p>
+      <p class="mt-6 flex flex-wrap gap-3">
+        <a href={mapUrl(stop)} rel="noopener" class="btn btn-accent press">Get directions<span class="sr-only"> to {stop.venueName}</span></a>
+        <a href={withBase('/calendar/')} class="btn btn-outline press text-primary-foreground">All dates</a>
+      </p>
+    </>
+  ) : (
+    <>
+      <p class="mt-3 font-display text-3xl sm:text-4xl">Announced soon</p>
+      <p class="mt-3 max-w-md text-primary-foreground/85">We are lining up the next stops. Follow us on Instagram to be first to know, or ask us to come to you.</p>
+      <p class="mt-6"><a href={withBase('/book/')} class="btn btn-accent press">Book the trailer</a></p>
+    </>
+  )}
+</div>

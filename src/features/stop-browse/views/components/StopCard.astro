@@ -1,0 +1,33 @@
+---
+import { formatStopDate, formatTimes, locationText, type Stop } from '@/domain/stop/stop-timing';
+import { googleCalendarUrl, mapUrl } from '@/features/stop-browse/utilities/calendar';
+
+interface Props {
+  stop: Stop;
+  headingLevel?: 'h2' | 'h3';
+  reveal?: boolean;
+}
+const { stop, headingLevel: Heading = 'h3', reveal = true } = Astro.props;
+const priv = stop.kind === 'private';
+const kindLabel = { pitch: 'Regular pitch', market: 'Market', festival: 'Festival', private: 'Booked' }[stop.kind];
+---
+
+<li id={stop.id} data-reveal={reveal ? true : undefined} class="card scroll-mt-28 p-6 sm:p-8">
+  <p class="eyebrow text-muted-foreground">{kindLabel}</p>
+  <time datetime={stop.date} class="mt-3 block font-display text-3xl text-primary">{formatStopDate(stop.date)}</time>
+  <Heading class="mt-1 text-xl font-normal text-foreground">{priv ? 'Private event' : stop.title}</Heading>
+  <p class="mt-4 text-sm font-semibold tabular-nums">{formatTimes(stop)}</p>
+  {priv ? (
+    <p class="mt-2 text-muted-foreground">The trailer is booked for a private event that day.</p>
+  ) : (
+    <>
+      <p class="mt-2">{locationText(stop)}</p>
+      {stop.note && <p class="mt-2 text-muted-foreground">{stop.note}</p>}
+      <p class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+        <a href={mapUrl(stop)} rel="noopener" class="inline-flex min-h-10 items-center underline underline-offset-4">Directions<span class="sr-only"> to {stop.venueName}</span></a>
+        <a href={googleCalendarUrl(stop)} rel="noopener" class="inline-flex min-h-10 items-center underline underline-offset-4">Add to calendar<span class="sr-only"> for {formatStopDate(stop.date)}</span></a>
+        {stop.link && <a href={stop.link} rel="noopener" class="inline-flex min-h-10 items-center underline underline-offset-4">More about this stop</a>}
+      </p>
+    </>
+  )}
+</li>

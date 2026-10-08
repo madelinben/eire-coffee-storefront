@@ -1,0 +1,32 @@
+---
+import { withBase } from '@/utilities/with-base';
+import { socialLinks } from '@/data/Content/settings';
+import Illustration from '@/features/site-shell/views/components/Illustration.astro';
+
+const links = [
+  socialLinks.instagram && { label: 'Instagram', href: socialLinks.instagram, path: 'M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Zm5.2-3.2a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z' },
+  socialLinks.facebook && { label: 'Facebook', href: socialLinks.facebook, path: 'M13.5 22v-8.2h2.8l.5-3.4h-3.3V8.3c0-1 .3-1.7 1.7-1.7H17V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.6H7.5v3.4h2.8V22h3.2Z' },
+  socialLinks.whatsappNumber && { label: 'WhatsApp', href: `https://wa.me/${socialLinks.whatsappNumber}`, path: 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2Z' },
+].filter((link) => typeof link === 'object');
+---
+
+<section class="mx-auto max-w-6xl px-6 section-y">
+  <div data-reveal class="relative overflow-hidden rounded-[2.5rem] bg-secondary p-8 text-secondary-foreground sm:p-14">
+    <Illustration name="lighthouse" cut="var(--secondary)" class="pointer-events-none absolute -right-6 -top-6 hidden h-80 w-auto text-primary opacity-15 md:block" />
+    <div class="relative">
+      <h2 class="text-4xl sm:text-6xl">Say hello, or flag us down</h2>
+      <p class="mt-4 max-w-prose text-lg">Stops, specials and the odd rainy-day rescue are posted on Instagram first. Come and say hello, or message us about your event.</p>
+      <ul class="mt-8 flex flex-wrap gap-3">
+        {links.map((link) => (
+          <li>
+            <a href={link.href} rel="noopener" class="btn btn-primary press">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d={link.path} /></svg>
+              {link.label}
+            </a>
+          </li>
+        ))}
+        <li><a href={withBase('/contact/')} class="btn btn-outline press">Contact us</a></li>
+      </ul>
+    </div>
+  </div>
+</section>

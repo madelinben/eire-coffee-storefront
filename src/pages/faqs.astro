@@ -1,0 +1,24 @@
+---
+import { requireSite } from '@/utilities/require-site';
+import PageLayout from '@/layouts/PageLayout.astro';
+import CartLauncher from '@/features/cart-manage/views/components/CartLauncher.tsx';
+import FaqAccordion from '@/features/faq-browse/views/components/FaqAccordion.astro';
+import { getFaqsServer } from '@/data/Faq/get-faqs-server';
+import { toAbsolute } from '@/utilities/with-base';
+import { faqPageNode } from '@/features/site-seo/utilities/schema-nodes';
+import PageBanner from '@/features/site-shell/views/components/PageBanner.astro';
+
+const faqs = await getFaqsServer();
+const url = toAbsolute(requireSite(Astro.site), '/faqs/');
+---
+
+<PageLayout
+  title="Coffee Trailer FAQs"
+  description="Answers to common questions about Éire Coffee: where to find the trailer, booking it for events, how far we travel and what we serve."
+  breadcrumbs={[{ name: 'FAQs', path: '/faqs/' }]}
+  schema={faqs.length > 0 ? [faqPageNode(url, faqs)] : []}
+>
+  <CartLauncher slot="actions" client:idle />
+  <PageBanner title="FAQs" kicker="Good to know" art="cup" />
+  <section class="mx-auto max-w-3xl px-6 section-y"><FaqAccordion /></section>
+</PageLayout>
