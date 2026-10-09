@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 
 const money = (amount) => ({ amount, currencyCode: 'GBP' });
 // Pictures are served by this mock itself (scripts/mock-images), so no store or CDN is needed.
-const image = (name, alt) => ({ url: `http://localhost:4400/images/${name}.svg`, altText: alt, width: 800, height: 800 });
+const image = (name, alt) => ({ url: `${process.env.MOCK_IMAGE_BASE ?? 'http://localhost:4400/images'}/${name}.svg`, altText: alt, width: 800, height: 800 });
 const variant = (id, title, amount, availableForSale = true) => ({ id: `gid://shopify/ProductVariant/${id}`, title, availableForSale, price: money(amount) });
 const products = [
   {

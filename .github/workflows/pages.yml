@@ -42,7 +42,9 @@ jobs:
       - name: Use mock Storefront API until a store is configured
         if: ${{ !vars.PUBLIC_SHOPIFY_STORE_DOMAIN }}
         run: |
-          node scripts/mock-storefront.mjs &
+          # Mock pictures ship inside the site so they load over https on Pages.
+          cp -r scripts/mock-images public/mock-images
+          MOCK_IMAGE_BASE="$SITE_ORIGIN$BASE_PATH/mock-images" node scripts/mock-storefront.mjs &
           echo "PUBLIC_SHOPIFY_STOREFRONT_URL=http://localhost:4400" >> "$GITHUB_ENV"
           sleep 2
       - run: pnpm build
